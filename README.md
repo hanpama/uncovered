@@ -20,19 +20,18 @@ go install github.com/hanpama/uncovered@latest
 uncovered - Show uncovered lines from Go test coverage with context
 
 Usage:
-  uncovered [options]
+  uncovered <coverprofile>
 
-Options:
-  -coverprofile string
-    	Path to coverage profile file (default "coverage.out")
+Arguments:
+  coverprofile    Path to coverage profile file
 
 Examples:
   # Generate coverage and show uncovered lines
   go test -coverprofile=coverage.out ./...
-  uncovered
+  uncovered coverage.out
 
   # Use custom coverage file
-  uncovered -coverprofile=custom.out
+  uncovered custom.out
 ```
 
 ## Example Output

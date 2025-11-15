@@ -10,11 +10,7 @@
 // Generate a coverage profile and run uncovered:
 //
 //	go test -coverprofile=coverage.out ./...
-//	uncovered
-//
-// Specify a custom coverage file:
-//
-//	uncovered -coverprofile=custom.out
+//	uncovered coverage.out
 //
 // # Output Format
 //
@@ -52,14 +48,19 @@ func main() {
 
 func run() error {
 	// Parse command-line flags
-	var (
-		coverProfile = flag.String("coverprofile", "coverage.out", "Path to coverage profile file")
-	)
 	flag.Usage = usage
 	flag.Parse()
 
+	// Get coverage profile path from arguments
+	args := flag.Args()
+	if len(args) == 0 {
+		flag.Usage()
+		return fmt.Errorf("coverprofile argument is required")
+	}
+	coverProfile := args[0]
+
 	// Open coverage profile
-	file, err := os.Open(*coverProfile)
+	file, err := os.Open(coverProfile)
 	if err != nil {
 		return fmt.Errorf("opening coverage profile: %w", err)
 	}
@@ -103,18 +104,17 @@ func usage() {
 	fmt.Fprintf(os.Stderr, `uncovered - Show uncovered lines from Go test coverage with context
 
 Usage:
-  uncovered [options]
+  uncovered <coverprofile>
 
-Options:
-`)
-	flag.PrintDefaults()
-	fmt.Fprintf(os.Stderr, `
+Arguments:
+  coverprofile    Path to coverage profile file
+
 Examples:
   # Generate coverage and show uncovered lines
   go test -coverprofile=coverage.out ./...
-  uncovered
+  uncovered coverage.out
 
   # Use custom coverage file
-  uncovered -coverprofile=custom.out
+  uncovered custom.out
 `)
 }
